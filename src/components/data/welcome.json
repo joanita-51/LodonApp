@@ -1,0 +1,27 @@
+[
+    {
+        "src":"room.jpg",
+        "alt":"Room",
+        "class":""
+    },
+    {
+        "src":"pool.jpg",
+        "alt":"Pool",
+        "class":""
+    },
+    {
+        "src":"dining.jpg",
+        "alt":"Dining",
+        "class":""
+    },
+    {
+        "src":"attractions.jpg",
+        "alt":"Attractions",
+        "class":""
+    },    
+    {
+        "src":"wedding.jpg",
+        "alt":"Dining",
+        "class":"hidesm"
+    }
+]
