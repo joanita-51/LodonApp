@@ -1,4 +1,10 @@
-var AWS = require("aws-sdk");
+var AWS = require("aws-sdk"),
+    {
+      DynamoDBDocument
+    } = require("@aws-sdk/lib-dynamodb"),
+    {
+      DynamoDB
+    } = require("@aws-sdk/client-dynamodb");
 var fs = require('fs');
 
 AWS.config.update({
@@ -7,7 +13,7 @@ AWS.config.update({
 
 console.log("Writing entries to Services table.");
 
-var dynamodb = new AWS.DynamoDB.DocumentClient();
+var dynamodb = DynamoDBDocument.from(new DynamoDB());
 var servicesData = 
   JSON.parse(fs.readFileSync('../components/data/services.json', 'utf8'));
 

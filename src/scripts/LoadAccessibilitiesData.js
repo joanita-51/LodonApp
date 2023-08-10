@@ -1,29 +1,41 @@
-var AWS = require("aws-sdk");
-var fs = require('fs');
+// Import necessary modules from the AWS SDK v3
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { marshall } from "@aws-sdk/util-dynamodb";
+import fs from "fs";
 
-AWS.config.update({
-  region: "eu-west-2"
-});
+// Create a new DynamoDB client
+const client = new DynamoDBClient({ region: "eu-west-2" });
 
 console.log("Writing entries to Accessibilities table.");
 
-var dynamodb = new AWS.DynamoDB.DocumentClient();
-var accessibilitiesData = 
-  JSON.parse(fs.readFileSync('../components/data/accessibility.json', 'utf8'));
+// Read data from the JSON file
+const accessibilitiesData = JSON.parse(
+  fs.readFileSync("../components/data/accessibility.json", "utf8")
+);
 
-accessibilitiesData.forEach(function(accessibililty) {
-  var params = {
-    TableName: "Accessibilities",
-    Item: {
-      "name": accessibililty.name
+// Function to asynchronously add items to the table
+async function addItemsToTable() {
+  for (const accessibility of accessibilitiesData) {
+    console.log("Current Accessibility Object:", accessibility); 
+    const params = {
+      TableName: "Accessibilities",
+      Item: marshall({
+        "name": {S: encodeURIComponent(accessibility.name)},
+      }),
+    };
+
+    try {
+      await client.send(new PutItemCommand(params));
+      console.log("Added", accessibility.name, "to table.");
+    } catch (error) {
+      console.error(
+        "Unable to load data into table for accessibilities",
+        accessibility.name,
+        ". Error: ",error
+      );
     }
-  };
+  }
+}
 
-  dynamodb.put(params, function(err, data) {
-    if (err)
-      console.error("Unable to load data into table for accessibility",
-      accessibililty.name, ". Error: ", JSON.stringify(err, null, 2))
-    else
-      console.log("Added", accessibililty.name, "to table.")
-  })
-});
+// Call the function to add items to the table
+addItemsToTable();

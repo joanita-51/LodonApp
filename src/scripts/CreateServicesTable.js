@@ -1,10 +1,13 @@
-var AWS = require("aws-sdk");
+var AWS = require("aws-sdk"),
+    {
+      DynamoDB
+    } = require("@aws-sdk/client-dynamodb");
 
 AWS.config.update({
   region: "eu-west-2"
 });
 
-var dynamodb = new AWS.DynamoDB();
+var dynamodb = new DynamoDB();
 
 var params = {
   TableName: "Services",
